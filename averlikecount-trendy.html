@@ -17,20 +17,25 @@
 			margin-top: 10px;
 			text-align: center;
 		}
+    .axiss {
+      font-size: 16px;
+			margin-top: 0px;
+			text-align: center;
+    }
 		</style>
 
 	</head>
 	<body>
-
+    <a href="productivity-trendy">productivity-trendy</a><br/>
+    <a href="postcount-averlikecount">postcount-averlikecount</a>
 		<div class="chart"></div>
 		<div class="equation"></div>
 		<div class="equation"></div>
-
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script>
 	  var margin = {top: 5, right: 5, bottom: 20, left: 120},
 	    width = 950 - margin.left - margin.right,
-	    height = 950 - margin.top - margin.bottom;
+	    height = 800 - margin.top - margin.bottom;
 
 	  var svg = d3.select(".chart").append("svg")
 	      .attr("width", width + margin.left + margin.right)
@@ -42,7 +47,7 @@
 	      .range([0,width]);
 
 	  var y = d3.scaleLinear()
-        .domain( [0,672625208])
+        // .domain( [0,672625208])
 	      .range([height,0]);
 
 	  var xAxis = d3.axisBottom()
@@ -51,10 +56,10 @@
 	  var yAxis = d3.axisLeft()
 	      .scale(y);
 
-	  d3.csv("4ten.tags.crawled.1.csv", function(error, data){
+	  d3.csv("4ten.tags.crawled.tag.averlikecount.trendy.csv", function(error, data){
 
-	    // y.domain(d3.extent(data, function(d){ return d.y}));
-	    x.domain(d3.extent(data, function(d){ return d.x}));
+	    y.domain(d3.extent(data, function(d){ return Number(d.y)}));
+	    x.domain(d3.extent(data, function(d){ return Number(d.x)}));
 
 	    // see below for an explanation of the calcLinear function
 	    // var lg = calcLinear(data, "x", "y", d3.min(data, function(d){ return d.x}), d3.min(data, function(d){ return d.x}));
@@ -70,6 +75,10 @@
     var div = d3.select("body").append("div")	
       .attr("class", "follow_chart_tooltip")				
       .style("opacity", 0);
+    var divXaxis = d3.select("body").append("div")
+        .attr("class", "axiss")	
+    var divYaxis = d3.select("body").append("div")
+        .attr("class", "axiss")	        
       
 	    svg.append("g")
 	        .attr("class", "x axis")
@@ -92,14 +101,23 @@
                 .duration(200)		
                 .style("opacity", .9);		
             div.html(d.tag)	
-                .style("left", (d3.event.pageX) + "px")		
+                .style("left", (d3.event.pageX-200) + "px")		
                 .style("top", (d3.event.pageY - 28) + "px");	
-            })					
+            divXaxis.html('averlikecount')  // x축	
+              .style("position", "absolute")
+              .style("left", (width + 50) + "px")		
+              .style("top", (height + 58) + "px");  
+            divYaxis.html('trendy')  // y축	
+              .style("position", "absolute")
+              .style("left", (width - 750) + "px")		
+              .style("top", (height - 628) + "px");            					                
+          })
           .on("mouseout", function(d) {		
               div.transition()		
                   .duration(500)		
                   .style("opacity", 0);
           })
+
 
 	  });
 
